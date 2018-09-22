@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using tutorfy_backend.Models;
 
 namespace tutorfy_backend
 {
@@ -26,5 +27,7 @@ namespace tutorfy_backend
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {}
+
+        public DbSet<Appointment> Appointments { get; set; }
     }
 }
