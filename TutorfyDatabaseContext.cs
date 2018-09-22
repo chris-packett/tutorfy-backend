@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace tutorfy-backend
+namespace tutorfy_backend
 {
     public partial class TutorfyDatabaseContext : DbContext
     {
