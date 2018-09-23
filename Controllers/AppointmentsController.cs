@@ -45,8 +45,8 @@ namespace tutorfy_backend.Controllers
         {
             var _appointment = new Appointment
             {
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(1),
+                StartTime = appointment.StartTime,
+                EndTime = appointment.StartTime.AddHours(1),
                 IsCompleted = false,
                 IsCancelled = false,
                 Location = appointment.Location
