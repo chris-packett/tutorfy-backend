@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using tutorfy_backend.Models;
+using tutorfy_backend.ViewModels;
 
 namespace tutorfy_backend.Controllers
 {
@@ -41,15 +42,15 @@ namespace tutorfy_backend.Controllers
         //POST api/appointments/add
         [HttpPost]
         [Route("add")]
-        public ActionResult<ResponseObject> Post([FromBody] Appointment appointment)
+        public ActionResult<ResponseObject> Post([FromBody] CreateAppointmentViewModel vm)
         {
             var _appointment = new Appointment
             {
-                StartTime = appointment.StartTime,
-                EndTime = appointment.StartTime.AddHours(1),
+                StartTime = vm.StartTime,
+                EndTime = vm.StartTime.AddHours(vm.AppointmentLength),
                 IsCompleted = false,
                 IsCancelled = false,
-                Location = appointment.Location
+                Location = vm.Location
             }; 
 
             this.db.Appointments.Add(_appointment);
