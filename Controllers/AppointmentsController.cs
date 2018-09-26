@@ -28,7 +28,7 @@ namespace tutorfy_backend.Controllers
         [HttpGet]
         public ActionResult<ResponseObject> Get()
         {
-            var _appointments = this.db.Appointments;
+            var _appointments = this.db.Appointments.OrderBy(o => o.StartTime);
 
             var _rv = new ResponseObject
             {
