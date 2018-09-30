@@ -50,7 +50,9 @@ namespace tutorfy_backend.Controllers
                 EndTime = vm.StartTime.AddHours(vm.AppointmentLength),
                 IsCompleted = false,
                 IsCancelled = false,
-                Location = vm.Location
+                Location = vm.Location,
+                StudentId = 1,
+                TutorId = 2
             }; 
 
             this.db.Appointments.Add(_appointment);
