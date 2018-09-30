@@ -10,5 +10,13 @@ namespace tutorfy_backend.Models
         public bool IsCompleted { get; set; }
         public bool IsCancelled { get; set; }
         public string Location { get; set; }
+
+        //Student FK
+        public int StudentId { get; set; }
+        public Student Student { get; set; }
+
+        //Tutor FK
+        public int TutorId { get; set; }
+        public Tutor Tutor { get; set; }
     }
 }
