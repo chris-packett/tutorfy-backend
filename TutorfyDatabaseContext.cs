@@ -29,5 +29,8 @@ namespace tutorfy_backend
         {}
 
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Tutor> Tutors { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
     }
 }
