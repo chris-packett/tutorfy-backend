@@ -13,7 +13,7 @@
 - [ ] api/appointments 
 
 #### GET for api/users
-<!-- Get all tutors -->
+<!-- Get all tutors and pass auth token -->
 - [ ] api/users/tutors
 <!-- Get one tutor -->
 - [ ] api/users/tutors/{id}
@@ -33,13 +33,10 @@
 #### POST for api/users
 <!-- Add a user -->
 - [ ] api/users/add
-<!-- Add a tutor -->
-- [ ] api/users/tutors/add
-<!-- Add a student -->
-- [ ] api/users/students/add
+<!-- localStorage save whether tutor or student from front page ask -->
 
 #### POST for api/quiz
-<!-- Add a quiz -->
+<!-- Add a quiz and return count of tutors matched -->
 - [ ] api/quiz/add
 
 
