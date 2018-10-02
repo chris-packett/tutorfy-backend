@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 
 namespace tutorfy_backend
 {
@@ -27,6 +28,10 @@ namespace tutorfy_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services
+                .AddEntityFrameworkNpgsql()
+                .AddDbContext<TutorfyDatabaseContext>(opt =>
+                    opt.UseNpgsql("server=localhost; Database=TutorfyDatabase"));   
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

@@ -13,9 +13,9 @@ namespace tutorfy_backend.Controllers
     public class AppointmentsController : ControllerBase
     {
         private TutorfyDatabaseContext db { get; set; }
-        public AppointmentsController()
+        public AppointmentsController(TutorfyDatabaseContext _db)
         {
-            this.db = new TutorfyDatabaseContext();
+            this.db = _db;
         }
 
         public class ResponseObject
