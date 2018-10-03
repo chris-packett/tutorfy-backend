@@ -42,8 +42,8 @@ namespace tutorfy_backend
 
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://dewseph.auth0.com/";
-                options.Audience = "https://places.i.have.been.api";
+                options.Authority = "https://tutorfy.auth0.com/";
+                options.Audience = "https://tutorfy.api";
             });   
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
