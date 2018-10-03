@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace tutorfy_backend
 {
@@ -31,7 +32,20 @@ namespace tutorfy_backend
             services
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<TutorfyDatabaseContext>(opt =>
-                    opt.UseNpgsql("server=localhost; Database=TutorfyDatabase"));   
+                    opt.UseNpgsql("server=localhost; Database=TutorfyDatabase"));
+
+            // Add auth services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://dewseph.auth0.com/";
+                options.Audience = "https://places.i.have.been.api";
+            });   
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -54,6 +68,7 @@ namespace tutorfy_backend
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials());
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
