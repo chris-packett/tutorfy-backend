@@ -26,7 +26,8 @@ namespace tutorfy_backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<ResponseObject> Get()
+        [Route("all")]
+        public ActionResult<ResponseObject> GetUsers()
         {
             var _users = this.db.Users;
 
@@ -39,15 +40,32 @@ namespace tutorfy_backend.Controllers
             return _rv;
         }
 
+        [HttpGet]
+        [Route("one")]
+        public ActionResult<ResponseObject> GetUser()
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _user
+            };
+
+            return _rv;
+        }
+
         [HttpPost]
         [Route("add")]
         public ActionResult<ResponseObject> Post([FromBody] User user)
         {
             var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
-            var _rv = new ResponseObject();
-
             var _existedUser = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject();
 
             if (_existedUser == null)
             {
