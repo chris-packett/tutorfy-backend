@@ -40,21 +40,21 @@ namespace tutorfy_backend.Controllers
             return _rv;
         }
 
-        // [HttpGet]
-        // [Route("one")]
-        // public ActionResult<ResponseObject> GetTutor()
-        // {
-        //     var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+        [HttpGet]
+        [Route("one")]
+        public ActionResult<ResponseObject> GetTutor()
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
-        //     var _tutor = this.db.Tutors.FirstOrDefault(f => f.Auth == _userId);
+            var _tutor = this.db.Tutors.FirstOrDefault(f => f.User.AuthServiceId == _userId);
 
-        //     var _rv = new ResponseObject()
-        //     {
-        //         WasSuccessful = true,
-        //         Results = _tutor
-        //     };
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutor
+            };
 
-        //     return _rv;
-        // }
+            return _rv;
+        }
     }
 }
