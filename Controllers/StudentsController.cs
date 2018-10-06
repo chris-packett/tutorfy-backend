@@ -63,6 +63,8 @@ namespace tutorfy_backend.Controllers
         {
             var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
             var _existedStudent = this.db.Students.FirstOrDefault(f => f.User.AuthServiceId == _userId);
 
             var _rv = new ResponseObject();
@@ -75,7 +77,7 @@ namespace tutorfy_backend.Controllers
                     ZipCode = student.ZipCode,
                     IsActivated = true,
                     IsProfileCompleted = false,
-                    UserId = student.UserId
+                    UserId = _user.Id
                 };
 
                 this.db.Students.Add(_student);
