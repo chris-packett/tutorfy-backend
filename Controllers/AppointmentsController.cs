@@ -51,8 +51,8 @@ namespace tutorfy_backend.Controllers
                 IsCompleted = false,
                 IsCancelled = false,
                 Location = vm.Location,
-                StudentId = 1,
-                TutorId = 2
+                StudentId = 2,
+                TutorId = 3
             }; 
 
             this.db.Appointments.Add(_appointment);

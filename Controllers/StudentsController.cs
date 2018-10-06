@@ -56,5 +56,42 @@ namespace tutorfy_backend.Controllers
 
             return _rv;
         }
+
+        [HttpPost]
+        [Route("add")]
+        public ActionResult<ResponseObject> Post([FromBody] Student student)
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _existedStudent = this.db.Students.FirstOrDefault(f => f.User.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject();
+
+            if (_existedStudent == null)
+            {
+                var _student = new Student()
+                {
+                    Name = student.Name,
+                    ZipCode = student.ZipCode,
+                    IsActivated = true,
+                    IsProfileCompleted = false,
+                    UserId = student.UserId
+                };
+
+                this.db.Students.Add(_student);
+
+                this.db.SaveChanges();
+
+                _rv.WasSuccessful = true;
+                _rv.Results = _student;
+            }
+            else
+            {
+                _rv.WasSuccessful = true;
+                _rv.Results = null;
+            }
+
+            return _rv;
+        }
     }
 }
