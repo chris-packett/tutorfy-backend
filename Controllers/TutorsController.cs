@@ -57,11 +57,26 @@ namespace tutorfy_backend.Controllers
 
         [HttpGet]
         [Route("one")]
-        public ActionResult<ResponseObject> GetTutor()
+        public ActionResult<ResponseObject> GetTutorByAuthId()
         {
             var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
             var _tutor = this.db.Tutors.FirstOrDefault(f => f.User.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutor
+            };
+
+            return _rv;
+        }
+
+        [HttpGet]
+        [Route("profile/{id}")]
+        public ActionResult<ResponseObject> getTutorById(int id)
+        {
+            var _tutor = this.db.Tutors.FirstOrDefault(f => f.Id == id);
 
             var _rv = new ResponseObject()
             {
