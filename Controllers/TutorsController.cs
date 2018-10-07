@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tutorfy_backend.Models;
 
@@ -10,7 +10,7 @@ namespace tutorfy_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    // [Authorize]
     public class TutorsController : ControllerBase
     {
         private TutorfyDatabaseContext db { get; set; }
@@ -30,6 +30,21 @@ namespace tutorfy_backend.Controllers
         public ActionResult<ResponseObject> GetTutors()
         {
             var _tutors = this.db.Tutors;
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutors
+            };
+
+            return _rv;
+        }
+
+        [HttpGet]
+        [Route("top/{amt}")]
+        public ActionResult<ResponseObject> GetTopThreeTutors(int amt)
+        {
+            var _tutors = this.db.Tutors.Take(amt);
 
             var _rv = new ResponseObject()
             {
