@@ -10,6 +10,7 @@ namespace tutorfy_backend.Models
         public string ZipCode { get; set; }
         public bool IsActivated { get; set; }
         public bool IsProfileCompleted { get; set; }
+        public string PictureURL { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
     }
