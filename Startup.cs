@@ -22,6 +22,8 @@ namespace tutorfy_backend
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var db = new TutorfyDatabaseContext();
+            db.Database.Migrate();
         }
 
         public IConfiguration Configuration { get; }
@@ -30,10 +32,11 @@ namespace tutorfy_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            var conn = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "server=localhost; Database=TutorfyDatabase";
             services
                 .AddEntityFrameworkNpgsql()
                 .AddDbContext<TutorfyDatabaseContext>(opt =>
-                    opt.UseNpgsql("server=localhost; Database=TutorfyDatabase"));
+                    opt.UseNpgsql(conn));
 
             // Add auth services
             services.AddAuthentication(options =>
