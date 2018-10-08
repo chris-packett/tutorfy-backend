@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-// using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tutorfy_backend.Models;
 using tutorfy_backend.ViewModels;
@@ -11,7 +11,7 @@ namespace tutorfy_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public class AppointmentsController : ControllerBase
     {
         private TutorfyDatabaseContext db { get; set; }
@@ -30,14 +30,13 @@ namespace tutorfy_backend.Controllers
         [HttpGet]
         public ActionResult<ResponseObject> Get()
         {
-            // var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
-            // var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
 
-            // var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
+            var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
 
-            // var _appointments = this.db.Appointments.Where(w => w.StudentId == _student.Id).OrderBy(o => o.StartTime);
-            var _appointments = this.db.Appointments.OrderBy(o => o.StartTime);
+            var _appointments = this.db.Appointments.Where(w => w.StudentId == _student.Id).OrderBy(o => o.StartTime);
 
             var _rv = new ResponseObject
             {
@@ -53,6 +52,12 @@ namespace tutorfy_backend.Controllers
         [Route("add")]
         public ActionResult<ResponseObject> Post([FromBody] CreateAppointmentViewModel vm)
         {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
+
             var _appointment = new Appointment
             {
                 StartTime = vm.StartTime,
@@ -60,8 +65,8 @@ namespace tutorfy_backend.Controllers
                 IsCompleted = false,
                 IsCancelled = false,
                 Location = vm.Location,
-                StudentId = 5,
-                TutorId = 3
+                StudentId = _student.Id,
+                TutorId = vm.TutorId
             }; 
 
             this.db.Appointments.Add(_appointment);
