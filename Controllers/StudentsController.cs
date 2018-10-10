@@ -58,6 +58,21 @@ namespace tutorfy_backend.Controllers
         }
 
         [HttpGet]
+        [Route("profile/{id}")]
+        public ActionResult<ResponseObject> getStudentById(int id)
+        {
+            var _student = this.db.Students.FirstOrDefault(f => f.Id == id);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _student
+            };
+
+            return _rv;
+        }
+
+        [HttpGet]
         [Route("profile_complete")]
         public ActionResult<ResponseObject> GetStudentProfileCompletion()
         {

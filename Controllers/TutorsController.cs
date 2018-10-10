@@ -44,6 +44,31 @@ namespace tutorfy_backend.Controllers
         [Route("top/{amt}")]
         public ActionResult<ResponseObject> GetTopThreeTutors(int amt)
         {
+            //get _userId of who is requesting (student)
+            //get _student based on f.User.AuthServiceId == _userId
+            //get _studentAnswerOne based on _student.Quiz.AnswerOne, get _studentAnswerTwo, get _studentAnswerThree
+            //var _tutors = this.db.Tutors.Where(w => w.IsProfileCompleted == true)
+            //var _tutorsWithScores = _tutors.map(_tutor => {
+            //  let _score = 0;
+            //  if (_tutor.Quiz.AnswerOne == _studentAnswerOne)
+            //  {
+            //      _score++;
+            //  }
+            //  if (_tutor.Quiz.AnswerTwo == _studentAnswerTwo)
+            //  {
+            //      _score++;
+            //  }
+            //  if (_tutor.Quiz.AnswerThree == _studentAnswerThree)
+            //  {
+            //      _score++;
+            //  }
+            //  return {
+            //      tutor: _tutor,
+            //      score: _score
+            //  }
+            //})
+            //var _tutorsByRank = _tutorsWithScores.OrderBy(o => o.score).Take(3);
+
             var _tutors = this.db.Tutors.Take(amt);
 
             var _rv = new ResponseObject()

@@ -28,22 +28,37 @@ namespace tutorfy_backend.Controllers
 
         //GET api/appointments
         [HttpGet]
-        public ActionResult<ResponseObject> Get()
+        [Route("{userType}")]
+        public ActionResult<ResponseObject> Get(string userType)
         {
             var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
             var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
 
-            var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
+            // IOrderedQueryable<Appointment> _appointments;
 
-            var _appointments = this.db.Appointments.Where(w => w.StudentId == _student.Id).OrderBy(o => o.StartTime);
-
-            var _rv = new ResponseObject
+            var _rv = new ResponseObject()
             {
-                WasSuccessful = true,
-                Results = _appointments
+                WasSuccessful = true
             };
-            
+
+            if (userType == "students")
+            {
+                var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
+
+                var _appointments = this.db.Appointments.Where(w => w.StudentId == _student.Id).OrderBy(o => o.StartTime);
+
+                _rv.Results = _appointments;
+            }
+            else if (userType == "tutors")
+            {
+                var _tutor = this.db.Tutors.FirstOrDefault(f => f.UserId == _user.Id);
+
+                var _appointments = this.db.Appointments.Where(w => w.TutorId == _tutor.Id).OrderBy(o => o.StartTime);
+
+                _rv.Results = _appointments;
+            }
+
             return _rv;
         }
 
