@@ -44,37 +44,69 @@ namespace tutorfy_backend.Controllers
         [Route("top/{amt}")]
         public ActionResult<ResponseObject> GetTopThreeTutors(int amt)
         {
-            //get _userId of who is requesting (student)
-            //get _student based on f.User.AuthServiceId == _userId
-            //get _studentAnswerOne based on _student.Quiz.AnswerOne, get _studentAnswerTwo, get _studentAnswerThree
-            //var _tutors = this.db.Tutors.Where(w => w.IsProfileCompleted == true)
-            //var _tutorsWithScores = _tutors.map(_tutor => {
-            //  let _score = 0;
-            //  if (_tutor.Quiz.AnswerOne == _studentAnswerOne)
-            //  {
-            //      _score++;
-            //  }
-            //  if (_tutor.Quiz.AnswerTwo == _studentAnswerTwo)
-            //  {
-            //      _score++;
-            //  }
-            //  if (_tutor.Quiz.AnswerThree == _studentAnswerThree)
-            //  {
-            //      _score++;
-            //  }
-            //  return {
-            //      tutor: _tutor,
-            //      score: _score
-            //  }
-            //})
-            //var _tutorsByRank = _tutorsWithScores.OrderBy(o => o.score).Take(3);
-
             var _tutors = this.db.Tutors.Take(amt);
 
             var _rv = new ResponseObject()
             {
                 WasSuccessful = true,
                 Results = _tutors
+            };
+
+            return _rv;
+        }
+
+        [HttpGet]
+        [Route("matched")]
+        public ActionResult<ResponseObject> GetTutorMatchesForStudent()
+        {
+            //get _userId of who is requesting (student)
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            //get _student based on f.User.AuthServiceId == _userId
+            var _student = this.db.Students.FirstOrDefault(f => f.User.AuthServiceId == _userId);
+            //get _studentAnswerOne based on _student.Quiz.AnswerOne, get _studentAnswerTwo, get _studentAnswerThree
+            var _studentQuiz = this.db.Quizzes.FirstOrDefault(f => f.Id == _student.QuizId);
+
+            var _studentAnswerOne = _studentQuiz.AnswerOne;
+            var _studentAnswerTwo = _studentQuiz.AnswerTwo;
+            var _studentAnswerThree = _studentQuiz.AnswerThree;
+
+            var _tutors = this.db.Tutors.Where(w => w.IsProfileCompleted == true).ToList();
+
+            var _tutorsWithScores = _tutors.Select(_tutor => {
+                var _tutorQuiz = this.db.Quizzes.FirstOrDefault(f => f.Id == _tutor.QuizId);
+
+                var _score = 0;
+
+                if (_tutorQuiz.AnswerOne == _studentAnswerOne)
+                {
+                    _score++;
+                }
+
+                if (_tutorQuiz.AnswerTwo == _studentAnswerTwo)
+                {
+                    _score++;
+                }
+
+                if (_tutorQuiz.AnswerThree == _studentAnswerThree)
+                {
+                    _score++;
+                }
+
+                var _tutorWithScore = new {
+                    tutor = _tutor,
+                    score = _score
+                };
+
+                return _tutorWithScore;
+            });
+
+            var _tutorsByRank = _tutorsWithScores.OrderBy(o => o.score);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutorsByRank
+                // Results = _studentAnswerOne
             };
 
             return _rv;
