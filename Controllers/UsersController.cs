@@ -57,6 +57,38 @@ namespace tutorfy_backend.Controllers
             return _rv;
         }
 
+        [HttpGet]
+        [Route("type")]
+        public ActionResult<ResponseObject> GetUserType()
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _isStudent = _user.IsStudent;
+
+            var _isTutor = _user.IsTutor;
+
+            var _userType = "";
+
+            if (_isStudent == true)
+            {
+                _userType = "students";
+            }
+            else if (_isTutor == true)
+            {
+                _userType = "tutors";
+            }
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _userType
+            };
+
+            return _rv;
+        }
+
         [HttpPost]
         [Route("add")]
         public ActionResult<ResponseObject> Post([FromBody] User user)

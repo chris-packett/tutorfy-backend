@@ -11,5 +11,7 @@ namespace tutorfy_backend.Models
         public bool IsProfileCompleted { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
+        public int QuizId { get; set; } = 2;
+        public Quiz Quiz { get; set; }
     }
 }

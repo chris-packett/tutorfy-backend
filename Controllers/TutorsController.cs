@@ -87,6 +87,23 @@ namespace tutorfy_backend.Controllers
             return _rv;
         }
 
+        [HttpGet]
+        [Route("profile_complete")]
+        public ActionResult<ResponseObject> GetTutorProfileCompletion()
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _tutor = this.db.Tutors.FirstOrDefault(f => f.User.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutor.IsProfileCompleted
+            };
+
+            return _rv;
+        }
+
         [HttpPost]
         [Route("add")]
         public ActionResult<ResponseObject> Post([FromBody] Tutor tutor)
@@ -108,6 +125,7 @@ namespace tutorfy_backend.Controllers
                     ZipCode = tutor.ZipCode,
                     IsActivated = true,
                     IsProfileCompleted = false,
+                    PictureURL = tutor.PictureURL,
                     UserId = _user.Id
                 };
 
@@ -123,6 +141,32 @@ namespace tutorfy_backend.Controllers
                 _rv.WasSuccessful = true;
                 _rv.Results = null;
             }
+
+            return _rv;
+        }
+
+        //PATCH api/tutors/quiz/add/{quizId}
+        [HttpPatch]
+        [Route("quiz/add/{quizId}")]
+        public ActionResult<ResponseObject> Patch(int quizId)
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _tutor = this.db.Tutors.FirstOrDefault(f => f.UserId == _user.Id);
+
+            _tutor.QuizId = quizId;
+
+            _tutor.IsProfileCompleted = true;
+
+            this.db.SaveChanges();
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _tutor
+            };
 
             return _rv;
         }

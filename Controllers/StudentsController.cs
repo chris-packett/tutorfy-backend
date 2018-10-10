@@ -42,7 +42,7 @@ namespace tutorfy_backend.Controllers
 
         [HttpGet]
         [Route("one")]
-        public ActionResult<ResponseObject> GetStudent()
+        public ActionResult<ResponseObject> GetStudentByAuthId()
         {
             var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
 
@@ -52,6 +52,23 @@ namespace tutorfy_backend.Controllers
             {
                 WasSuccessful = true,
                 Results = _student
+            };
+
+            return _rv;
+        }
+
+        [HttpGet]
+        [Route("profile_complete")]
+        public ActionResult<ResponseObject> GetStudentProfileCompletion()
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _student = this.db.Students.FirstOrDefault(f => f.User.AuthServiceId == _userId);
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _student.IsProfileCompleted
             };
 
             return _rv;
@@ -92,6 +109,32 @@ namespace tutorfy_backend.Controllers
                 _rv.WasSuccessful = true;
                 _rv.Results = null;
             }
+
+            return _rv;
+        }
+
+        //PATCH api/students/quiz/add/{quizId}
+        [HttpPatch]
+        [Route("quiz/add/{quizId}")]
+        public ActionResult<ResponseObject> Patch(int quizId)
+        {
+            var _userId = User.Claims.First(f => f.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+
+            var _user = this.db.Users.FirstOrDefault(f => f.AuthServiceId == _userId);
+
+            var _student = this.db.Students.FirstOrDefault(f => f.UserId == _user.Id);
+
+            _student.QuizId = quizId;
+
+            _student.IsProfileCompleted = true;
+
+            this.db.SaveChanges();
+
+            var _rv = new ResponseObject()
+            {
+                WasSuccessful = true,
+                Results = _student
+            };
 
             return _rv;
         }
